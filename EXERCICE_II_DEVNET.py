@@ -1,21 +1,14 @@
-bgp_output = '''BGP router identifier 10.220.88.20, local AS number 42
-BGP table version is 59, main routing table version 59
-Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-10.220.88.38    4           44    7536    8296       59    0    0 5d05h           0'''
+arp_table = [('10.220.88.1', '0062.ec29.70fe'), ('10.220.88.20', 'c89c.1dea.0eb6'), ('10.220.88.21', '1c6a.7aaf.576c'), ('10.220.88.28', '5254.aba8.9aea'), ('10.220.88.29', '5254.abbe.5b7b'), ('10.220.88.30', '5254.ab71.e119'), ('10.220.88.32', '5254.abc7.26aa'), ('10.220.88.33', '5254.ab3a.8d26'), ('10.220.88.35', '5254.abfb.af12'), ('10.220.88.37', '0001.00ff.0001'), ('10.220.88.38', '0002.00ff.0001'), ('10.220.88.39', '6464.9be8.08c8'), ('10.220.88.40', '001c.c4bf.826a'), ('10.220.88.41', '001b.7873.5634')]
 
-# Split the output into lines
-bgp_lines = bgp_output.splitlines()
+# On boucle sur la table 'arp_table' et on y extrait toutes les adresses MAC
+mac_addresses = []
+for entry in arp_table:
+    mac = entry[1]
+    mac = mac.upper().replace(".", "").replace(":", "") # en majiscule
+    octets = [mac[i:i+2] for i in range(0, len(mac), 2)] # découper la chaîne en octets de longueur 2
+    mac = ":".join(octets) # insérer des deux-points entre chaque paire d'octets
+    mac_addresses.append(mac)
 
-# Get the first and last lines
-first_line = bgp_lines[0]
-last_line = bgp_lines[-1]
-
-# Extract the local AS number from the first line using string.split()
-local_as = first_line.split()[-1]
-
-# Extract the IP address of the BGP peer from the last line using string.split()
-bgp_peer_ip = last_line.split()[0]
-
-# Print the local AS number and the IP address of the BGP peer
-print("Local AS number:", local_as)
-print("BGP peer IP address:", bgp_peer_ip)
+# Sortie des adresse sous format MAC 
+for mac in mac_addresses:
+    print(mac)
